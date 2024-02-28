@@ -8,7 +8,7 @@ spec:
 
   remote:
     addresses:
-    - a218d34ddf77b47a4af651a3caf8d7a0-372390872.us-east-2.elb.amazonaws.com  # $WEST_LB This value comes from namespace: east-istio-system -> service/ingress-west
+    - WEST_LB  # $WEST_LB This value comes from namespace: east-istio-system -> service/ingress-west
     discoveryPort: 8188
     servicePort: 15443
     
