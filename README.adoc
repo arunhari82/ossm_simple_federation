@@ -49,6 +49,9 @@ Doing so install Red Hat OpenShift Service Mesh (OSSM).
 $ oc apply -k east/infra \
   && oc apply -k east/mesh-cp
 
+Note : The following command needs to be run since gateway creation may fail as service member is not setup yet
+$ oc apply -f ./east/mesh-cp/ootb-ingress-gw.yml   
+
 $ oc wait --for condition=Ready -n east-istio-system smcp/east-fed --timeout 300s
 -----
 
@@ -107,12 +110,20 @@ image::docs/images/base-federation-topology.png[]
 
 === OC Config Utility Setup
 
+oc config delete-context east-istio
+oc config delete-context west-istio
+
+oc config current-context
+oc config rename-context $(oc config current-context) east-istio
+
 .. Rename OCP config names for each cluster (similar to the following):
 +
 -----
 $ oc config rename-context east-istio-system/api-den-east-ratwater-xyz:6443/system:admin east-istio
 $ oc config rename-context west-istio-system/api-den-west-ratwater-xyz:6443/system:admin west-istio
 -----
+
+oc config rename-context bookinfo/api-cluster-pxtsx-dynamic-redhatworkshops-io:6443/admin east-istio
 
 
 === east - east2

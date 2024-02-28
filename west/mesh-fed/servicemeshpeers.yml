@@ -8,7 +8,7 @@ spec:
 
   remote:
     addresses:
-    - 192.168.1.201
+    - ab8bcc9a1165a4ea099fd647ed51dc37-1188341908.us-east-2.elb.amazonaws.com # east-istio-system:service:ingress-west
     discoveryPort: 8188
     servicePort: 15443
     

@@ -27,6 +27,10 @@ spec:
   version: v2.4
   security:
     manageNetworkPolicy: true
+    identity:
+      thirdParty:
+        audience: istio-ca
+      type: ThirdParty
 
     # This value is used when configuring mesh federation in the ServiceMeshPeer resource.
     trust:
