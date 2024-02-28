@@ -61,7 +61,7 @@ $ oc wait --for condition=Ready -n east-istio-system smcp/east-fed --timeout 300
 $ oc apply -k east/app
 
 
-$ curl -X GET http://$(oc get route istio-ingressgateway -n east-istio-system --template='{{.spec.host}}')/info
+$ curl -X GET http://$(oc get route istio-ingressgateway -n east-istio-system --template='{{.spec.host}}')/hello/env
 -----
 
 ==== east2
@@ -219,6 +219,23 @@ $ oc config use-context east-istio \
     && oc create configmap west-ca-root-cert --from-literal=root-cert.pem="$WEST_MESH_CERT" -n east-istio-system
 -----
 
+. *Getting Load Balancers from AWS clusters
++
+-----
+$ oc config use-context east-istio && export WEST_LB=$(oc get svc ingress-west -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n east-istio-system)
+echo $WEST_LB
+
+` Update this value to ossm_simple_federation/west/mesh-fed/servicemeshpeers.yml  `
+
+$ oc config use-context west-istio && export EAST_LB=$(oc get svc ingress-east -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n west-istio-system)
+echo $EAST_LB
+
+` Update this value to ossm_simple_federation/east/mesh-fed/west/servicemeshpeers.yml  `
+-----
+
+
+
+
 . *west*:  Apply `ServiceMeshPeer` & `ExportedServiceSet`
 +
 -----
@@ -348,9 +365,10 @@ $ oc apply -f east/app/dr-fed-failover.yml
 . Test:
 +
 -----
-$ for i in {1..100}
+$ for i in {1..1000}
   do
-    curl -X GET http://$(oc get route istio-ingressgateway -n east-istio-system --template='{{.spec.host}}')/info;
+    curl -m 10 -X  GET http://$(oc get route istio-ingressgateway -n east-istio-system --template='{{.spec.host}}')/hello/env;
+    echo ""
     sleep 2;
   done
 -----
